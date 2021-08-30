@@ -10,7 +10,8 @@ export class ImagenPipe implements PipeTransform {
   undefined: string = 'assets/no-image.png';
 
   transform( heroe: Heroe ): string {
-    if(heroe.id === null) return this.undefined;
+    if( heroe.id === undefined && heroe.alt_img === '' ) return this.undefined;
+    if( heroe.alt_img ) return heroe.alt_img;
     return `${this.ruta}${heroe.id}.jpg`;
   }
 
