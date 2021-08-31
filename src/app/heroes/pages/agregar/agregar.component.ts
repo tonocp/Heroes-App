@@ -59,7 +59,10 @@ export class AgregarComponent implements OnInit {
     if(this.heroe.id){
       // Update
       this.HeroesService.actualizarHeroe( this.heroe )
-        .subscribe( heroe => this.mostrarSnackBar('Registro Actualizado!'));
+        .subscribe( heroe => {
+          this.heroe = heroe;
+          this.mostrarSnackBar('Registro Actualizado!');
+        });
     } else {
       // Guardar
       this.HeroesService.agregarHeroe( this.heroe )
@@ -73,15 +76,25 @@ export class AgregarComponent implements OnInit {
 
   borrar() {
 
-    this.dialog.open(ConfirmarComponent, {
-      width: '50%'
+    const dialog = this.dialog.open(ConfirmarComponent, {
+      width: '50%',
+      data: { ...this.heroe }
     });
 
-    // this.HeroesService.borrarHeroe( this.heroe.id! )
-    //   .subscribe( resp => {
-    //     this.router.navigate(['/heroes']);
-    //     this.mostrarSnackBar('Registro Borrado!');
-    //   })
+    dialog.afterClosed().subscribe(
+      result => {
+
+        if(result){
+          this.HeroesService.borrarHeroe( this.heroe.id! )
+          .subscribe( resp => {
+             this.router.navigate(['/heroes']);
+             this.mostrarSnackBar('Registro Borrado!');
+          });
+        }
+        
+      }
+    );
+
   }
 
   mostrarSnackBar( mensaje: string ){
