@@ -1,52 +1,72 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-
-import { asapScheduler, Observable, scheduled } from 'rxjs';
-import { map, tap } from 'rxjs/operators';
-
-import { environment } from '../../../environments/environment';
-import { Auth } from '../interfaces/auth.interface';
+import { environment } from 'src/environments/environment';
+import { AuthResponse, Usuario } from '../interfaces/auth.interface';
+import { catchError, map, tap } from 'rxjs/operators';
+import { of, Observable } from 'rxjs';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AuthService {
+  private baseUrl = environment.baseUrl;
+  private _usuario!: Usuario;
 
-  private baseUrl: string = environment.baseUrl;
-  private _auth: Auth | undefined;
-  
-  get auth(): Auth {
-    return { ...this._auth! };
+  get usuario() {
+    return { ...this._usuario };
   }
 
-  borraAuth() {
-    this._auth = undefined;
-    sessionStorage.removeItem('token');
+  constructor(private http: HttpClient) {}
+
+  login(email: string, password: string) {
+    const url = `${this.baseUrl}/auth`;
+    const body = { email, password };
+    return this.http.post<AuthResponse>(url, body).pipe(
+      tap((resp) => {
+        if (resp.ok) {
+          sessionStorage.setItem('token', resp.token!);
+        }
+      }),
+      map((resp) => resp.ok),
+      catchError((err) => of(err.error.msg))
+    );
   }
 
-  constructor( private http: HttpClient ) { }
-
-  checkAuth(): Observable<boolean> {
-    if( !sessionStorage.getItem('token') ) return scheduled( [false], asapScheduler );
-    return this.http.get<Auth>( `${ this.baseUrl }/usuarios/1` )
-              .pipe(
-                map( auth => {
-                  this._auth = auth;
-                  return true;
-                })
-              )
-  }
-
-  login() {
-    return this.http.get<Auth>( `${ this.baseUrl }/usuarios/1` )
-        .pipe(
-          tap( auth => this._auth = auth ),
-          tap( auth => sessionStorage.setItem('token', auth.id) )
-        );
+  validarToken(): Observable<boolean> {
+    const url = `${this.baseUrl}/auth/renew`;
+    const headers = new HttpHeaders().set(
+      'x-token',
+      sessionStorage.getItem('token') || ''
+    );
+    return this.http.get<AuthResponse>(url, { headers }).pipe(
+      map((resp) => {
+        sessionStorage.setItem('token', resp.token!);
+        this._usuario = {
+          name: resp.name!,
+          uid: resp.uid!,
+          email: resp.email!,
+        };
+        return resp.ok;
+      }),
+      catchError((err) => of(false))
+    );
   }
 
   logout() {
-    this._auth = undefined;
+    sessionStorage.clear();
   }
 
+  registro(name: string, email: string, password: string) {
+    const url = `${this.baseUrl}/auth/new`;
+    const body = { name, email, password };
+    return this.http.post<AuthResponse>(url, body).pipe(
+      tap(({ ok, token }) => {
+        if (ok) {
+          sessionStorage.setItem('token', token!);
+        }
+      }),
+      map((resp) => resp.ok),
+      catchError((err) => of(err.error.msg))
+    );
+  }
 }
