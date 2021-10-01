@@ -6,36 +6,39 @@ import { Heroe } from '../interfaces/heroes.interface';
 import { environment } from '../../../environments/environment.prod';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class HeroesService {
-
   private baseUrl: string = environment.baseUrl;
 
-  constructor( private http: HttpClient) { }
+  constructor(private http: HttpClient) {}
 
   getHeroes(): Observable<Heroe[]> {
-    return this.http.get<Heroe[]>( `${ this.baseUrl }/heroes` );
+    return this.http.get<Heroe[]>(`${this.baseUrl}/heroes/listado`);
   }
 
-  getHeroePorId( id:string ): Observable<Heroe> {
-    return this.http.get<Heroe>( `${ this.baseUrl }/heroes/${ id }` );
+  getHeroePorId(id: string): Observable<Heroe> {
+    return this.http.get<Heroe>(`${this.baseUrl}/heroes/${id}`, {
+      headers: { id: id },
+    });
   }
 
-  getSugerencias( termino: string): Observable<Heroe[]>{
-    return this.http.get<Heroe[]>( `${ this.baseUrl }/heroes?q=${ termino }&_limit=5` );
+  getSugerencias(termino: string): Observable<Heroe[]> {
+    return this.http.get<Heroe[]>(
+      `${this.baseUrl}/heroes?q=${termino}&_limit=5`
+    );
   }
 
-  agregarHeroe( heroe: Heroe ): Observable<Heroe> {
-    if(heroe.alt_img === '') heroe.alt_img = 'assets/no-image.png';
-    return this.http.post<Heroe>( `${ this.baseUrl }/heroes` , heroe);
+  agregarHeroe(heroe: Heroe): Observable<Heroe> {
+    if (heroe.alt_img === '') heroe.alt_img = 'assets/no-image.png';
+    return this.http.post<Heroe>(`${this.baseUrl}/heroes/new`, heroe);
   }
 
-  actualizarHeroe( heroe: Heroe ): Observable<Heroe> {
-    return this.http.put<Heroe>( `${ this.baseUrl }/heroes/${ heroe.id }` , heroe);
+  actualizarHeroe(heroe: Heroe): Observable<Heroe> {
+    return this.http.put<Heroe>(`${this.baseUrl}/heroes/${heroe.id}`, heroe);
   }
 
-  borrarHeroe( id: string ): Observable<any> {
-    return this.http.delete<any>( `${ this.baseUrl }/heroes/${ id }`);
+  borrarHeroe(id: string): Observable<any> {
+    return this.http.delete<any>(`${this.baseUrl}/heroes/${id}`);
   }
 }
