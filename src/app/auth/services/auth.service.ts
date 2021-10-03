@@ -24,7 +24,7 @@ export class AuthService {
     return this.http.post<AuthResponse>(url, body).pipe(
       tap((resp) => {
         if (resp.ok) {
-          sessionStorage.setItem('token', resp.token!);
+          localStorage.setItem('token', resp.token!);
         }
       }),
       map((resp) => resp.ok),
@@ -36,11 +36,11 @@ export class AuthService {
     const url = `${this.baseUrl}/auth/renew`;
     const headers = new HttpHeaders().set(
       'x-token',
-      sessionStorage.getItem('token') || ''
+      localStorage.getItem('token') || ''
     );
     return this.http.get<AuthResponse>(url, { headers }).pipe(
       map((resp) => {
-        sessionStorage.setItem('token', resp.token!);
+        localStorage.setItem('token', resp.token!);
         this._usuario = {
           name: resp.name!,
           uid: resp.uid!,
@@ -53,7 +53,7 @@ export class AuthService {
   }
 
   logout() {
-    sessionStorage.clear();
+    localStorage.clear();
   }
 
   registro(name: string, email: string, password: string) {
@@ -62,7 +62,7 @@ export class AuthService {
     return this.http.post<AuthResponse>(url, body).pipe(
       tap(({ ok, token }) => {
         if (ok) {
-          sessionStorage.setItem('token', token!);
+          localStorage.setItem('token', token!);
         }
       }),
       map((resp) => resp.ok),
