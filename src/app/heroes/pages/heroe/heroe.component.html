@@ -1,43 +1,57 @@
 <mat-grid-list cols="1" *ngIf="!heroe; else divHeroe">
-<ng-template #elseTemplate>
-    
-</ng-template>
->
-    <mat-grid-tile>
-        <mat-spinner></mat-spinner>
-    </mat-grid-tile>
+  <ng-template #elseTemplate> </ng-template>
+  >
+  <mat-grid-tile>
+    <mat-spinner></mat-spinner>
+  </mat-grid-tile>
 </mat-grid-list>
 
 <ng-template #divHeroe>
-    
-    <div fxLayout="row"
-         fxLayout.xs="col"
-         fxLayoutGap="30px">
-
-         <div fxFlex="50">
-             <h1>{{ heroe.superhero }} <small>- {{ heroe.alter_ego }}</small></h1>
-             <mat-divider></mat-divider>
-             <br>
-             <img [src]="heroe |imagen">
-         </div>
-         <div fxFlex="50">
-             <h1>{{ heroe.publisher }}</h1>
-             <mat-divider></mat-divider>
-             <mat-list>
-                 <mat-list-item><b>Primera aparición:</b> &nbsp; {{ heroe.first_appearance }}</mat-list-item>
-                 <mat-list-item><b>Personajes:</b> &nbsp; {{ heroe.characters }}</mat-list-item>
-                 <mat-list-item><b>Publicado por:</b> &nbsp; {{ heroe.publisher }}</mat-list-item>
-                 <mat-list-item><b>Alter-Ego:</b> &nbsp; {{ heroe.alter_ego }}</mat-list-item>
-             </mat-list>
-             <br>
-             <button mat-button 
-                     color="warn"
-                     (click)="atras()">
-                 Atrás
-             </button>
-
-        </div>
-
+  <div
+    fxLayout="row"
+    fxLayout.xs="column"
+    fxLayoutAlign="center"
+    fxLayoutGap="10%"
+  >
+    <div fxFlex="25">
+      <h1>
+        {{ heroe.superhero }}, <small>a.k.a "{{ heroe.alter_ego }}"</small>
+      </h1>
+      <mat-divider></mat-divider>
+      <br />
+      <img [src]="heroe | imagen" />
     </div>
-
+    <div fxFlex="25">
+      <h1>{{ heroe.publisher }}</h1>
+      <mat-divider></mat-divider>
+      <mat-list>
+        <mat-list-item>
+          <h2 matLine>Primera aparición:</h2>
+          <p matLine>
+            {{ heroe.first_appearance }}
+          </p>
+        </mat-list-item>
+        <mat-list-item>
+          <h2 matLine>Personajes:</h2>
+          <p matLine>
+            {{ heroe.characters }}
+          </p>
+        </mat-list-item>
+        <mat-list-item>
+          <h2 matLine>Publicado por:</h2>
+          <p matLine>
+            {{ heroe.publisher }}
+          </p>
+        </mat-list-item>
+        <mat-list-item>
+          <h2 matLine>Alter-ego:</h2>
+          <p matLine>
+            {{ heroe.alter_ego }}
+          </p>
+        </mat-list-item>
+      </mat-list>
+      <br />
+      <button mat-button color="warn" (click)="atras()">Atrás</button>
+    </div>
+  </div>
 </ng-template>

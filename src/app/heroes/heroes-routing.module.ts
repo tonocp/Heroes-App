@@ -14,38 +14,34 @@ const routes: Routes = [
     children: [
       {
         path: 'listado',
-        component: ListadoComponent
+        component: ListadoComponent,
       },
       {
         path: 'agregar',
-        component: AgregarComponent
+        component: AgregarComponent,
       },
       {
         path: 'editar/:id',
-        component: AgregarComponent
+        component: AgregarComponent,
       },
       {
         path: 'buscar',
-        component: BuscarComponent
+        component: BuscarComponent,
       },
       {
         path: ':id',
-        component: HeroeComponent
+        component: HeroeComponent,
       },
       {
         path: '**',
-        redirectTo: 'listado'
-      }
-    ]
-  }
+        redirectTo: 'listado',
+      },
+    ],
+  },
 ];
 
 @NgModule({
-  imports: [
-    RouterModule.forChild( routes )
-  ],
-  exports: [
-    RouterModule
-  ]
+  imports: [RouterModule.forChild(routes)],
+  exports: [RouterModule],
 })
-export class HeroesRoutingModule { }
+export class HeroesRoutingModule {}
