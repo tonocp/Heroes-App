@@ -14,7 +14,7 @@ export class HeroesService {
   constructor(private http: HttpClient) {}
 
   getHeroes(): Observable<Heroe[]> {
-    return this.http.get<Heroe[]>(`${this.baseUrl}/heroes/listado`);
+    return this.http.get<Heroe[]>(`${this.baseUrl}/heroes/list`);
   }
 
   getHeroePorId(id: string): Observable<Heroe> {
@@ -24,19 +24,19 @@ export class HeroesService {
   }
 
   getSugerencias(termino: string): Observable<Heroe[]> {
-    return this.http.get<Heroe[]>(`${this.baseUrl}/heroes/buscar/${termino}`, {
+    return this.http.get<Heroe[]>(`${this.baseUrl}/heroes/search/${termino}`, {
       headers: { termino: termino },
     });
   }
 
   agregarHeroe(heroe: Heroe): Observable<Heroe> {
     if (heroe.alt_img === '') heroe.alt_img = 'assets/no-image.png';
-    return this.http.post<Heroe>(`${this.baseUrl}/heroes/agregar`, heroe);
+    return this.http.post<Heroe>(`${this.baseUrl}/heroes/new`, heroe);
   }
 
   actualizarHeroe(heroe: Heroe): Observable<Heroe> {
     return this.http.put<Heroe>(
-      `${this.baseUrl}/heroes/editar/${heroe.id}`,
+      `${this.baseUrl}/heroes/edit/${heroe.id}`,
       heroe
     );
   }
